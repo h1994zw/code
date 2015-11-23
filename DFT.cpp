@@ -428,7 +428,9 @@ bool circleConv(plur pluA[], plur pluB[], int lenA, int lenB, int L)
 {
 	if (L < max_AB(lenA, lenB))
 		return FALSE;
-	int n = pow(2.0, L);
+	int n_fir=0;
+	while (L>pow(2.0, n_fir))n_fir++;
+	int n = pow(2.0, n_fir);
 	float real, imag;
 	float *AI = new float[n];
 	float *AR = new float[n];
@@ -457,8 +459,8 @@ bool circleConv(plur pluA[], plur pluB[], int lenA, int lenB, int L)
 			BR[i] = 0;
 		}
 	}
-	DFT_FFT(AR, AI, L, n, 1); 
-	DFT_FFT(BR, BI, L, n, 1);
+	DFT_FFT(AR, AI, n_fir, n, 1); 
+	DFT_FFT(BR, BI, n_fir, n, 1);
 	for (int i = 0; i < n; i++)
 	{
 		real = AR[i] * BR[i] - AI[i] * BI[i];
@@ -466,7 +468,7 @@ bool circleConv(plur pluA[], plur pluB[], int lenA, int lenB, int L)
 		AR[i] = real;
 		AI[i] = imag;
 	}
-	DFT_FFT(AR, AI, L, n, -1);
+	DFT_FFT(AR, AI, n_fir, n, -1);
 	for (int i = 0; i < L; i++)
 	{
 		pluA[i].real = AR[i];
