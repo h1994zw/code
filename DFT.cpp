@@ -478,6 +478,8 @@ bool circleConv(plur pluA[], plur pluB[], int lenA, int lenB, int L)
 }
 /*
 输入 序列 选择窗函数cho 以及序列长度N  注意N为奇数
+freq_cho 为0是输出的是频率函数
+不为0的时候输出的是损耗函数（正数）
 */
 void FIR(float AR[], float AI[], char cho,int N,float wc,char freq_cho)
 {
@@ -532,8 +534,8 @@ void FIR(float AR[], float AI[], char cho,int N,float wc,char freq_cho)
 		AR[i] = BR[i] * CR[i];
 		AI[i] = BI[i] * CI[i];
 	}
-	DFT_FFT(AR, AI, 6, 64, 1);
-	if (freq_cho)
+	DFT_FFT(AR, AI, 6, 64, 1);//这里取64点 事实上应该作为参数传入的
+	if (freq_cho)//取20倍lg
 	{
 		for (int i = 0; i < 64; i++)
 		{
