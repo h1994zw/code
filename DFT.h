@@ -15,3 +15,4 @@ plur mul_plu(plur plu_a, plur plu_b);
 void DFT_MY(plur plu[], int n,int N,int choose);
 void DFT_FFT_1(plur plu[], int m, int n, int choose);
 bool circleConv(plur pluA[], plur pluB[], int lenA, int lenB, int L);
+void FIR(float AR[], float AI[], char cho, int N, float wc, char freq_cho);

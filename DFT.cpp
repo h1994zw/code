@@ -476,3 +476,69 @@ bool circleConv(plur pluA[], plur pluB[], int lenA, int lenB, int L)
 	}
 	return TRUE;
 }
+/*
+输入 序列 选择窗函数cho 以及序列长度N  注意N为奇数
+*/
+void FIR(float AR[], float AI[], char cho,int N,float wc,char freq_cho)
+{
+	float *BR = new float[N];
+	float *BI = new float[N];
+	float *CR = new float[N];
+	float *CI = new float[N];
+	wc = PI / wc;
+	if (cho == 0)//矩形窗
+	{
+		for (int i = 0; i < N; i++)
+		{
+			BR[i] = 1;
+			BI[i] = 0;
+		}
+	}
+	else if (cho == 1)//三角形窗
+	{
+		for (int i = 0; i < N; i++)
+		{
+			if (i <= (N - 1) / 2)
+			{
+				BR[i] = 2.0*i / (N - 1.0);
+			}
+			else
+			{
+				BR[i] = 2.0 - 2.0*i / (N - 1.0);
+			}
+			BI[i] = 0;
+		}
+	}
+	else if (cho == 2)//汉宁窗
+	{
+		for (int i = 0; i < N; i++)
+		{
+			BR[i] = 0.5*(1.0 - cos(2.0*PI*i / (N - 1)));
+			BI[i] = 0;
+		}
+	}
+	for (int i = 0; i < N; i++)
+	{
+		if (i == (N - 1) / 2)
+			CR[i] = 0.5;
+		else
+		{
+			CR[i] = sin(wc*(i - (N - 1.0) / 2.0)) / PI / (i - (N - 1.0) / 2.0);
+		}
+		CI[i] = 0;
+	}
+	for (int i = 0; i < N; i++)
+	{
+		AR[i] = BR[i] * CR[i];
+		AI[i] = BI[i] * CI[i];
+	}
+	DFT_FFT(AR, AI, 6, 64, 1);
+	if (freq_cho)
+	{
+		for (int i = 0; i < 64; i++)
+		{
+			AR[i] = 20 * log(sqrt(AR[i] * AR[i] + AI[i] * AI[i])) / log(10.0);
+			AI[i] = 0;
+		}
+	}
+}
